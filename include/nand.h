@@ -26,6 +26,9 @@
 #endif
 #endif
 
+#define CONFIG_SYS_MAX_NAND_DEVICE      1
+#define CONFIG_SYS_NAND_BASE            0x8b0000
+
 extern void nand_init(void);
 unsigned long nand_size(void);
 

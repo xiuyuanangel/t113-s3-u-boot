@@ -76,6 +76,11 @@ static void __secure __mdelay(u32 ms)
 	isb();
 }
 
+u32 __secure psci_version(void)
+{
+    return ARM_PSCI_VER_1_0;
+}
+
 static void __secure clamp_release(u32 __maybe_unused *clamp)
 {
 #if defined(CONFIG_MACH_SUN6I) || defined(CONFIG_MACH_SUN7I) || \
@@ -249,16 +254,20 @@ int __secure psci_cpu_on(u32 __always_unused unused, u32 mpidr, u32 pc,
 	struct sunxi_cpucfg_reg *cpucfg =
 		(struct sunxi_cpucfg_reg *)SUNXI_CPUCFG_BASE;
 	u32 cpu = (mpidr & 0x3);
-
+    sys_uart_putc('T');
+//printf("%s %s %d --- %d %x %x\n",__FILE__,__func__,__LINE__,cpu,pc,context_id);
 	/* store target PC and context id */
 	psci_save(cpu, pc, context_id);
 
+//printf("%s %s %d --- %d %x %x\n",__FILE__,__func__,__LINE__,cpu,pc,context_id);
 	/* Set secondary core power on PC */
 	sunxi_set_entry_address(&psci_cpu_entry);
 
+//printf("%s %s %d --- %d %x %x\n",__FILE__,__func__,__LINE__,cpu,pc,(u32)&cpucfg->cpu[cpu].rst);
 	/* Assert reset on target CPU */
 	writel(0, &cpucfg->cpu[cpu].rst);
 
+//printf("%s %s %d --- %d %x %x\n",__FILE__,__func__,__LINE__,cpu,pc,(u32)&cpucfg->gen_ctrl);
 	/* Invalidate L1 cache */
 	clrbits_le32(&cpucfg->gen_ctrl, BIT(cpu));
 

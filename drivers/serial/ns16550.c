@@ -543,6 +543,7 @@ int ns16550_serial_of_to_plat(struct udevice *dev)
 	int err;
 
 	addr = dev_read_addr(dev);
+
 	err = ns16550_serial_assign_base(plat, addr);
 	if (err && !device_is_on_pci_bus(dev))
 		return err;

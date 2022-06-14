@@ -273,6 +273,11 @@ ifeq ($(HOSTARCH),$(ARCH))
 CROSS_COMPILE ?=
 endif
 
+ARCH := riscv
+CROSS_COMPILE := /opt/linaro/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+#CROSS_COMPILE := /opt/riscv/toolchain-thead-glibc/riscv64-glibc-gcc-thead_20200702/bin/riscv64-unknown-linux-gnu-
+#CROSS_COMPILE := /opt/riscv/Xuantie-900-gcc-elf-newlib-x86_64-V2.2.4/bin/riscv64-unknown-elf-
+
 KCONFIG_CONFIG	?= .config
 export KCONFIG_CONFIG
 
@@ -1131,10 +1136,14 @@ PHONY += dtbs
 dtbs: dts/dt.dtb
 	@:
 dts/dt.dtb: u-boot
-	$(Q)$(MAKE) $(build)=dts dtbs
+	#@-cp -v $(DTS_PATH)/$(CONFIG_SYS_CONFIG_NAME)-common-board.dts $(DTS_PATH)/.board-uboot.dts
+	#$(Q)$(MAKE) $(build)=dts dtbs
+	$(DTC) $(DTS_WARNNING_SKIP) -I dts -O dtb  $(DTS_PATH)/$(CONFIG_DEFAULT_DEVICE_TREE).dts > $(DTS_PATH)/$(CONFIG_DEFAULT_DEVICE_TREE).dtb
+	$(DTC) $(DTS_WARNNING_SKIP) -I dtb -O dts  $(DTS_PATH)/$(CONFIG_DEFAULT_DEVICE_TREE).dtb > u-boot-dtb.dts
+	$(DTC) $(DTS_WARNNING_SKIP) -I dts -O dtb  u-boot-dtb.dts > dts/dt.dtb
 
 quiet_cmd_copy = COPY    $@
-      cmd_copy = cp $< $@
+    cmd_copy = cp $< $@
 
 ifeq ($(CONFIG_MULTI_DTB_FIT),y)
 
@@ -1206,7 +1215,7 @@ endif
 	$(Q)$(MAKE) $(build)=arch/arm/cpu/armv7/vf610 $@
 
 quiet_cmd_copy = COPY    $@
-      cmd_copy = cp $< $@
+      cmd_copy = cp -v $< $@
 
 u-boot.dtb: dts/dt.dtb
 	$(call cmd,copy)
@@ -1787,6 +1796,13 @@ endif
 
 ifeq ($(CONFIG_RISCV),y)
 	@tools/prelink-riscv $@ 0
+DTS_PATH := $(PWD)/arch/riscv/dts
+DTS_WARNNING_SKIP :=   -W no-unit_address_vs_reg \
+	-W no-unit_address_format \
+	-W no-simple_bus_reg \
+	-W no-pwms_property
+else
+DTS_PATH := $(PWD)/arch/arm/dts
 endif
 
 quiet_cmd_sym ?= SYM     $@

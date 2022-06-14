@@ -35,3 +35,5 @@ head-y := arch/riscv/cpu/start.o
 libs-y += arch/riscv/cpu/
 libs-y += arch/riscv/cpu/$(CPU)/
 libs-y += arch/riscv/lib/
+
+libs-$(CONFIG_ARCH_SUNXI) += arch/riscv/mach-sunxi/

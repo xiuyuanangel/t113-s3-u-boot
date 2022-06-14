@@ -141,7 +141,7 @@ static int mmc_set_mod_clk(struct sunxi_mmc_priv *priv, unsigned int hz)
 		 * This cancels each other out, so for simplicity we just
 		 * pretend it's always PLL6 without a post divider here.
 		 */
-		pll = CCM_MMC_CTRL_PLL6;
+		pll = CCM_MMC_CTRL_PLL6X2;
 		pll_hz = clock_get_pll6();
 #endif
 	}

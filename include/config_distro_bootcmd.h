@@ -235,10 +235,11 @@
 #define BOOTENV_RUN_SCSI_INIT
 #define BOOTENV_SET_SCSI_NEED_INIT
 #define BOOTENV_SHARED_SCSI
-#define BOOTENV_DEV_SCSI \
+/*#define BOOTENV_DEV_SCSI \
 	BOOT_TARGET_DEVICES_references_SCSI_without_CONFIG_SCSI
 #define BOOTENV_DEV_NAME_SCSI \
 	BOOT_TARGET_DEVICES_references_SCSI_without_CONFIG_SCSI
+*/
 #endif
 
 #ifdef CONFIG_IDE
@@ -410,11 +411,16 @@
 #define BOOTENV_DEV_NAME_PXE \
 	BOOT_TARGET_DEVICES_references_PXE_without_CONFIG_CMD_DHCP_or_PXE
 #endif
-
+/*
 #define BOOTENV_DEV_NAME(devtypeu, devtypel, instance) \
 	BOOTENV_DEV_NAME_##devtypeu(devtypeu, devtypel, instance)
 #define BOOTENV_BOOT_TARGETS \
 	"boot_targets=" BOOT_TARGET_DEVICES(BOOTENV_DEV_NAME) "\0"
+*/
+
+//    BOOTENV_BOOT_TARGETS
+
+#if 0
 
 #define BOOTENV_DEV(devtypeu, devtypel, instance) \
 	BOOTENV_DEV_##devtypeu(devtypeu, devtypel, instance)
@@ -433,8 +439,6 @@
 	"boot_prefixes=/ /boot/\0" \
 	"boot_scripts=boot.scr.uimg boot.scr\0" \
 	"boot_script_dhcp=boot.scr.uimg\0" \
-	BOOTENV_BOOT_TARGETS \
-	\
 	"boot_syslinux_conf=extlinux/extlinux.conf\0" \
 	"boot_extlinux="                                                  \
 		"sysboot ${devtype} ${devnum}:${distro_bootpart} any "    \
@@ -497,9 +501,68 @@
 		"for target in ${boot_targets}; do "                      \
 			"run bootcmd_${target}; "                         \
 		"done\0"
+#endif
+
+#define BOOT_SD_ROOTFS
+#undef BOOT_SD_ROOTFS
+
+#define BOOT_SPI_NAND_D
+#undef BOOT_SPI_NAND_D
+
+#define BOOTENV "setargs_mmc=setenv bootargs \"console=ttyS0,115200n8 earlyprintk=sunxi-uart,0x02500000 clk_ignore_unused loglevel=8 init=/init rootfstype=ext4 partitions=boot-resource@mmcblk0p1:env@mmcblk0p2:env-redund@mmcblk0p3:boot@mmcblk0p4:rootfs@mmcblk0p5 cma=8M ubi.mtd=4 root=/dev/mmcblk0p5\" && setenv kernel_comp_addr_r 0x41000000 && setenv bootm_mapsize 0x4000000 && setenv kernel_comp_size 0x600000 && setenv distro_bootcmd \"bootz 0x40080000 - 0x40020000\"\0" \
+                "setargs_spinand=setenv bootargs \"console=ttyS0,115200n8 earlyprintk=sunxi-uart,0x02500000 clk_ignore_unused loglevel=8 init=/init cma=8M ubi.mtd=4 rootfstype=ubifs,rw root=ubi0:rootfs\" && setenv kernel_comp_addr_r 0x41000000 && setenv bootm_mapsize 0x4000000 && setenv kernel_comp_size 0x600000 && setenv distro_bootcmd \"mtd read spi-nand0 0x40020000 0x00200000 0x20000 && mtd read spi-nand0 0x40080000 0x00220000 0x600000 && bootz 0x40080000 - 0x40020000\"\0" \
+                "setargs_rd=setenv bootargs \"console=ttyS0,115200n8 earlyprintk=sunxi-uart,0x02500000 clk_ignore_unused loglevel=8 init=/init cma=8M root=/dev/ram0 rw\" && setenv kernel_comp_addr_r 0x41000000 && setenv bootm_mapsize 0x4000000 && setenv kernel_comp_size 0x600000 && setenv verify no && setenv distro_bootcmd \"mtd read spi-nand0 0x47000000 0x00200000 0x20000 && mtd read spi-nand0 0x44000000 0x00220000 0x800000 && bootm 0x44000000 - 0x47000000\"\0" \
+                "setargs_dbg=setenv bootargs \"console=ttyS0,115200n8 earlyprintk=sunxi-uart,0x02500000 clk_ignore_unused loglevel=8 init=/init cma=8M ubi.mtd=4 rootfstype=ubifs,rw root=ubi0:rootfs rw\" && setenv kernel_comp_addr_r 0x41000000 && setenv bootm_mapsize 0x4000000 && setenv kernel_comp_size 0x600000 && setenv verify no && setenv distro_bootcmd \"bootm 0x44000000 - 0x47000000\"\0"  \
+                "setargs_drd=setenv bootargs \"console=ttyS0,115200n8 earlyprintk=sunxi-uart,0x02500000 clk_ignore_unused loglevel=8 init=/init cma=8M root=/dev/ram0 rw\" && setenv kernel_comp_addr_r 0x41000000 && setenv bootm_mapsize 0x4000000 && setenv kernel_comp_size 0x600000 && setenv verify no && setenv distro_bootcmd \"bootm 0x44000000 - 0x47000000\"\0"  \
+                "mtdparts="CONFIG_MTDPARTS_DEFAULT"\0" \
+                "mmc_run=run setargs_mmc && run distro_bootcmd\0" \
+                "spinand_run=run setargs_spinand && run distro_bootcmd\0" \
+                "rd_run=run setargs_rd && run distro_bootcmd\0" \
+                "drd_run=run setargs_drd && run distro_bootcmd\0" \
+                "dbg_run=run setargs_dbg && run distro_bootcmd\0"
+
+#undef CONFIG_BOOTCOMMAND
+#define CONFIG_BOOTCOMMAND "run drd_run"
+
+#if 0
+#ifdef BOOT_SD_ROOTFS
+#define BOOTENV "bootargs=console=ttyS0,115200n8 earlyprintk=sunxi-uart,0x02500000 clk_ignore_unused loglevel=8 " \
+                "init=/init rootfstype=ext4 partitions=boot-resource@mmcblk0p1:env@mmcblk0p2:env-redund@mmcblk0p3:boot@mmcblk0p4:rootfs@mmcblk0p5 cma=8M ubi.mtd=4 root=/dev/mmcblk0p5\0 \
+                kernel_comp_addr_r=0x41000000\0 \
+                bootm_mapsize=0x4000000\0 \
+                kernel_comp_size=0x600000\0 \
+                distro_bootcmd=bootz 0x40080000 - 0x40020000\0"
+#elif defined(BOOT_SPI_NAND_D) 
+#define BOOTENV "bootargs=console=ttyS0,115200n8 earlyprintk=sunxi-uart,0x02500000 clk_ignore_unused loglevel=8 " \
+                "init=/init cma=8M ubi.mtd=4 rootfstype=ubifs root=ubi0:rootfs ro\0 \
+                kernel_comp_addr_r=0x41000000\0 \
+                bootm_mapsize=0x4000000\0 \
+                kernel_comp_size=0x600000\0" \
+                "distro_bootcmd=mtd read spi-nand0 0x40020000 0x00200000 0x20000 && " \
+                "mtd read spi-nand0 0x40080000 0x00220000 0x600000 && " \
+                "bootz 0x40080000 - 0x40020000\0"
+#else
+#if 0
+#define BOOTENV "bootargs=console=ttyS0,115200n8 earlyprintk=sunxi-uart,0x02500000 clk_ignore_unused loglevel=8 " \
+                "init=/init cma=8M ubi.mtd=4 rootfstype=ubifs root=ubi0:rootfs rw\0 \
+                kernel_comp_addr_r=0x41000000\0 \
+                bootm_mapsize=0x4000000\0 \
+                kernel_comp_size=0x600000\0" \
+                "distro_bootcmd=bootz 0x40080000 - 0x40020000\0"
+#else
+#define BOOTENV "bootargs=console=ttyS0,115200n8 earlyprintk=sunxi-uart,0x02500000 clk_ignore_unused loglevel=8 " \
+                "init=/init cma=8M root=/dev/ram0 rw\0 \
+                kernel_comp_addr_r=0x41000000\0 \
+                bootm_mapsize=0x4000000\0 \
+                kernel_comp_size=0x600000\0" \
+                "verify=no\0" \
+                "distro_bootcmd=bootm 0x44000000 - 0x47000000\0" 
+#endif
+#endif
 
 #ifndef CONFIG_BOOTCOMMAND
 #define CONFIG_BOOTCOMMAND "run distro_bootcmd"
+#endif
 #endif
 
 #endif  /* _CONFIG_CMD_DISTRO_BOOTCMD_H */

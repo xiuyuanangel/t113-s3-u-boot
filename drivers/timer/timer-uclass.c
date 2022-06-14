@@ -137,7 +137,6 @@ int notrace dm_timer_init(void)
 	 */
 	if (gd->dm_root == NULL)
 		return -EAGAIN;
-
 	if (CONFIG_IS_ENABLED(OF_REAL)) {
 		/* Check for a chosen timer to be used for tick */
 		node = ofnode_get_chosen_node("tick-timer");

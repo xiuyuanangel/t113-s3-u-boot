@@ -25,6 +25,7 @@ obj-$(CONFIG_MACH_SUN8I)	+= clock_sun6i.o
 endif
 obj-$(CONFIG_MACH_SUN9I)	+= clock_sun9i.o gtbus_sun9i.o
 obj-$(CONFIG_SUN50I_GEN_H6)	+= clock_sun50i_h6.o
+obj-$(CONFIG_MACH_SUN8IW20) += clock_sun8iw20.o
 
 ifdef CONFIG_SPL_BUILD
 obj-$(CONFIG_DRAM_SUN4I)	+= dram_sun4i.o

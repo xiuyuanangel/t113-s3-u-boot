@@ -210,7 +210,7 @@ int boot_relocate_fdt(struct lmb *lmb, char **of_flat_tree, ulong *of_size)
 		    (void *)(ulong) lmb_alloc_base(lmb, of_len, 0x1000,
 						   env_get_bootm_mapsize()
 						   + env_get_bootm_low());
-	}
+    }	
 
 	if (of_start == NULL) {
 		puts("device tree - allocation error\n");

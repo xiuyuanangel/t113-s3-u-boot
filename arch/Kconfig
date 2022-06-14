@@ -407,6 +407,13 @@ config TPL_SKIP_LOWLEVEL_INIT_ONLY
 	  normal CP15 init (such as enabling the instruction cache) is still
 	  performed.
 
+choice
+    prompt "Target select"
+    default ARCH_SUNXI
+config ARCH_SUNXI
+    bool "Support sunxi (Allwinner) SoCs"
+endchoice
+
 source "arch/arc/Kconfig"
 source "arch/arm/Kconfig"
 source "arch/m68k/Kconfig"

@@ -81,6 +81,7 @@ typedef unsigned long flash_sect_t;
 
 /* convert between bit value and numeric value */
 #define CFI_FLASH_SHIFT_WIDTH	3
+#define CONFIG_SYS_MAX_FLASH_BANKS    1
 
 /* Prototypes */
 

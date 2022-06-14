@@ -382,6 +382,21 @@ config SPI_SUNXI
 
 	  Same controller driver can reuse in all Allwinner SoC variants.
 
+config HARD_SPI
+	bool "Hard SPI init"
+	help
+	  Enable for SPI Hard SPI init.
+
+config SUNXI_SPI
+	bool "Sunxi SPI driver"
+	help
+	  Enable support for SPI on the Sunxi SoCs.
+
+config SPI_USE_DMA
+    bool "SPI use dma driver"
+    help
+      Enable spi use dma.
+
 config STM32_QSPI
 	bool "STM32F7 QSPI driver"
 	depends on STM32F4 || STM32F7 || ARCH_STM32MP

@@ -33,7 +33,6 @@ static int serial_check_stdout(const void *blob, struct udevice **devp)
 	int node = -1;
 	const char *str, *p, *name;
 	int namelen;
-
 	/* Check for a chosen console */
 	str = fdtdec_get_chosen_prop(blob, "stdout-path");
 	if (str) {
@@ -146,14 +145,13 @@ static void serial_find_console_or_panic(void)
 			return;
 		}
 #endif
-
 #undef INDEX
 	}
-
 #ifdef CONFIG_REQUIRE_SERIAL_CONSOLE
 	panic_str("No serial driver found");
 #endif
 }
+
 #endif /* CONFIG_SERIAL_PRESENT */
 
 /* Called prior to relocation */

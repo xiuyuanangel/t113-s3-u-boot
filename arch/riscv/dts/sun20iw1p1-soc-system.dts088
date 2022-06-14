@@ -1,0 +1,41 @@
+/*
+ * Allwinner Technology CO., Ltd. sun20iw1p1 fpga.
+ *
+ * fpga support.
+ */
+
+/dts-v1/;
+
+/{
+    compatible = "allwinner,d1", "arm,sun20iw1p1", "allwinner,sun20iw1p1";
+
+    clock@2001000 {
+        compatible = "allwinner,sun50i-h616-ccu";
+        assigned-clock-rates = <0>;
+        reg = <0x0 0x2001000 0x0 0x1000>;
+        clocks = <0xa 0xb 0x3 0xb 0x0>;
+        clock-names = "hosc", "losc", "iosc";
+        phandle = <0x1>;
+    };
+    
+spi0: spi@4025000 {
+          compatible = "allwinner,sun20i-spi";
+          device_type = "spi0";
+          reg = <0x0 0x04025000 0x300>;
+          clock-names = "pll", "mod", "bus";
+
+          spi-max-frequency = <100000000>;
+          pinctrl-names = "default", "sleep";
+          spi0_cs_number = <1>;
+          spi0_cs_bitmap = <1>;
+          dma-names = "tx", "rx";
+          status = "okay";
+          spi-nand@0 {
+              compatible = "spi-nand";
+              reg = <0x0>;
+              spi-rx-bus-width=<0x04>;
+              spi-tx-bus-width=<0x04>;
+              status="okay";
+          };
+      };
+};

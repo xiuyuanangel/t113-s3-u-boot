@@ -603,6 +603,7 @@ static int run_main_loop(void)
  *
  * TODO: perhaps reset the watchdog in the initcall function after each call?
  */
+
 static init_fnc_t init_sequence_r[] = {
 	initr_trace,
 	initr_reloc,
@@ -630,6 +631,7 @@ static init_fnc_t init_sequence_r[] = {
 #ifdef CONFIG_SYS_NONCACHED_MEMORY
 	noncached_init,
 #endif
+    bootstage_relocate,
 	initr_of_live,
 #ifdef CONFIG_DM
 	initr_dm,

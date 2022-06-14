@@ -243,7 +243,10 @@ struct global_data {
 	/**
 	 * @fdt_size: space reserved for relocated device space
 	 */
+	void *new_ext_fdt;		/* Relocated EXTERNAL FDT */
+	void *new_dtbo;			/*Relocated dtbo */
 	unsigned long fdt_size;
+	unsigned long fdt_ext_size;	/* Space reserved for relocated EXTERNAL FDT */
 #if CONFIG_IS_ENABLED(OF_LIVE)
 	/**
 	 * @of_root: root node of the live tree
@@ -459,7 +462,48 @@ struct global_data {
 	 */
 	char *smbios_version;
 #endif
+    ulong  boot_logo_addr;
+#ifdef CONFIG_ARCH_SUNXI
+	long           securemode;
+	void          *parameter_mod_buf;
+	long           boot_card_num;
+	ulong          lockflag;
+	ulong          chargemode;
+
+	ulong          parameter_reloc_buf;
+	ulong          parameter_reloc_size;
+
+	ulong          malloc_noncache_start;
+
+	long           key_pressd_value;
+	long           axp_power_soft_id;
+	long           power_step_level;
+	long           pmu_suspend_chgcur;
+	long           pmu_runtime_chgcur;
+	long           limit_vol;
+	long           limit_cur;
+	long           limit_pcvol;
+	long           limit_pccur;
+	ulong          force_download_uboot;
+	ulong          vbus_status;//0: unknow 1:exist 2:not exist
+	ulong          debug_mode;
+	long           force_shell;
+	long           user_debug_mode;
+	ulong          layer_para;
+	ulong          layer_hd;
+	ulong          bootfile_mode;
+	int            pmu_saved_status;
+	int 		   need_shutdown;
+	int            logo_status_multiboot;
+	int            ir_detect_status;
+	bool			uboot_shell;
+	bool           force_32bit_os;//1: run 32bit os at 64bit platform
+
+#endif
 };
+
+typedef struct global_data gd_t;
+
 #ifndef DO_DEPS_ONLY
 static_assert(sizeof(struct global_data) == GD_SIZE);
 #endif

@@ -646,6 +646,7 @@ static inline void print_pre_console_buffer(int flushpoint) {}
 
 void putc(const char c)
 {
+sys_uart_putc(c);return;
 	if (!gd)
 		return;
 
@@ -687,6 +688,7 @@ void putc(const char c)
 
 void puts(const char *s)
 {
+sys_uart_puts(s);return;
 	if (!gd)
 		return;
 

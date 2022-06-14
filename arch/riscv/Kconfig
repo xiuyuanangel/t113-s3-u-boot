@@ -4,9 +4,23 @@ menu "RISC-V architecture"
 config SYS_ARCH
 	default "riscv"
 
+config SYS_CPU
+	default "c906" if CPU_C906
+
+config SYS_CACHE_LINE_SIZE_64
+	bool
+
+config SYS_CACHE_LINE_SIZE_32
+	bool
+
+config SYS_CACHELINE_SIZE
+	int
+	default 64 if SYS_CACHE_LINE_SIZE_64
+	default 32 if SYS_CACHE_LINE_SIZE_32
+
 choice
 	prompt "Target select"
-	optional
+	default ARCH_RISCV_SUNXI
 
 config TARGET_AX25_AE350
 	bool "Support ax25-ae350"
@@ -17,21 +31,23 @@ config TARGET_MICROCHIP_ICICLE
 config TARGET_QEMU_VIRT
 	bool "Support QEMU Virt Board"
 
-config TARGET_SIFIVE_UNLEASHED
-	bool "Support SiFive Unleashed Board"
+config TARGET_SIFIVE_FU540
+	bool "Support SiFive FU540 Board"
 
-config TARGET_SIFIVE_UNMATCHED
-	bool "Support SiFive Unmatched Board"
-	select SYS_CACHE_SHIFT_6
-
-config TARGET_SIPEED_MAIX
-	bool "Support Sipeed Maix Board"
-	select SYS_CACHE_SHIFT_6
-
-config TARGET_OPENPITON_RISCV64
-	bool "Support RISC-V cores on OpenPiton SoC"
+config ARCH_RISCV_SUNXI
+	bool "Support riscv sunxi (Allwinner) Board"
+	select OF_CONTROL
+	select SPECIFY_CONSOLE_INDEX
+	select SYS_NS16550
+	select USE_TINY_PRINTF
+	imply CMD_GPT
 
 endchoice
+
+config SUNXI_RISCV_MODE
+    bool "dynamic select Machine or Supervisor"
+    help
+        hoose this option to build U-Boot for dynamic mode
 
 config SYS_ICACHE_OFF
 	bool "Do not enable icache"
@@ -61,16 +77,14 @@ config SPL_SYS_DCACHE_OFF
 source "board/AndesTech/ax25-ae350/Kconfig"
 source "board/emulation/qemu-riscv/Kconfig"
 source "board/microchip/mpfs_icicle/Kconfig"
-source "board/sifive/unleashed/Kconfig"
-source "board/sifive/unmatched/Kconfig"
-source "board/openpiton/riscv64/Kconfig"
-source "board/sipeed/maix/Kconfig"
+#source "board/sifive/fu540/Kconfig"
 
 # platform-specific options below
 source "arch/riscv/cpu/ax25/Kconfig"
 source "arch/riscv/cpu/fu540/Kconfig"
 source "arch/riscv/cpu/fu740/Kconfig"
 source "arch/riscv/cpu/generic/Kconfig"
+source "arch/riscv/mach-sunxi/Kconfig"
 
 # architecture-specific options below
 
@@ -124,6 +138,10 @@ config RISCV_SMODE
 	bool "Supervisor"
 	help
 	  Choose this option to build U-Boot for RISC-V S-Mode.
+config SUNXI_RISCV_MODE
+	bool "dynamic select Machine or Supervisor"
+	help
+		hoose this option to build U-Boot for dynamic mode
 
 endchoice
 
@@ -167,7 +185,11 @@ config DMA_ADDR_T_64BIT
 
 config SIFIVE_CLINT
 	bool
-	depends on RISCV_MMODE
+	depends on RISCV_MMODE || SPL_RISCV_MMODE
+	select REGMAP
+	select SYSCON
+	select SPL_REGMAP if SPL
+	select SPL_SYSCON if SPL
 	help
 	  The SiFive CLINT block holds memory-mapped control and status registers
 	  associated with software and timer interrupts.

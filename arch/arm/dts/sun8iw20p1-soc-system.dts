@@ -1,0 +1,67 @@
+/*
+ * Allwinner Technology CO., Ltd. sun20iw1p1 fpga.
+ *
+ * fpga support.
+ */
+
+/dts-v1/;
+
+/{
+	model = "sun20iw1p1";
+    compatible = "allwinner,d1", "allwinner,sun20iw1p1";
+
+    assigned-clock-rates = <0>;
+    #address-cells = <1>;
+    #size-cells = <1>;
+
+    spi0_clocks: clock@2001000 {
+         ccu_base = <0x02001000>;
+         spi0_clk_gate_off = <0x940>;
+         spi0_clk_reset_off = <0x96c>;
+    };
+
+    wdt_reboot: wdt_reboot@0 {
+        compatible = "wdt-reboot";
+    };
+
+    spi0_pins_a: spi0@0 {
+//        pins = "PC2", "PC4", "PC5","PC7", "PC6"; /*clk mosi miso hold wp*/
+        pins = "PC2", "PC3", "PC4","PC5"; /*clk mosi miso hold wp*/
+        function = "spi0";
+        muxsel = <2>;
+        drive-strength = <10>;
+    };
+
+    uart0: serial@02500000 {
+           compatible = "snps,dw-apb-uart";
+           reg = <0x02500000 0x400>;
+           reg-shift = <2>;
+           status = "okay";
+    };  
+                 
+    spi0: spi@4025000 {
+          compatible = "allwinner,sun20i-spi";
+          device_type = "spi0";
+          reg = <0x04025000 0x300>;
+          spi-max-frequency = <100000000>;
+          pinctrl-names = "default", "sleep";
+          pinctrl-0 = <&spi0_pins_a>;
+          clocks = <&spi0_clocks>;
+          clock-frequency = <100000000>;
+          spi0_cs_number = <1>;
+          spi0_cs_bitmap = <1>;
+          #address-cells = <1>;
+          #size-cells = <0>;
+          status = "okay";
+
+          spi-nand@0 {
+              compatible = "spi-nand";
+              spi-max-frequency = <100000000>;
+              reg = <0x0>;
+              spi-rx-bus-width=<1>;
+              spi-tx-bus-width=<1>;
+              status="okay";
+          };
+          
+    };
+};

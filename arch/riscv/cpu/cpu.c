@@ -159,3 +159,4 @@ int arch_early_init_r(void)
 __weak void harts_early_init(void)
 {
 }
+

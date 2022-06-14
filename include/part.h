@@ -77,7 +77,9 @@ struct disk_partition {
 #ifdef CONFIG_DOS_PARTITION
 	uchar	sys_ind;	/* partition type			*/
 #endif
-};
+} ;
+
+typedef struct disk_partition disk_partition_t;
 
 struct disk_part {
 	int partnum;

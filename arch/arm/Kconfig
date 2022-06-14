@@ -284,6 +284,13 @@ config CPU_ARM1176
 	select SYS_CACHE_SHIFT_5
 	imply SYS_ARM_MMU
 
+config CPU_V7
+	bool
+	select HAS_THUMB2
+	select HAS_VBAR
+	select SYS_CACHE_SHIFT_6
+	imply SYS_ARM_MMU
+
 config CPU_V7A
 	bool
 	select HAS_THUMB2
@@ -323,6 +330,7 @@ config SYS_CPU
 	default "arm946es" if CPU_ARM946ES
 	default "arm1136" if CPU_ARM1136
 	default "arm1176" if CPU_ARM1176
+    default "armv7" if CPU_V7
 	default "armv7" if CPU_V7A
 	default "armv7" if CPU_V7R
 	default "armv7m" if CPU_V7M
@@ -338,6 +346,7 @@ config SYS_ARM_ARCH
 	default 5 if CPU_ARM946ES
 	default 6 if CPU_ARM1136
 	default 6 if CPU_ARM1176
+    default 7 if CPU_V7
 	default 7 if CPU_V7A
 	default 7 if CPU_V7M
 	default 7 if CPU_V7R
@@ -541,7 +550,32 @@ config ARM64_SUPPORT_AARCH32
 
 choice
 	prompt "Target select"
-	default TARGET_HIKEY
+#    default TARGET_HIKEY
+#	default ARCH_SUNXI
+	default ARCH_ARM_SUNXI
+
+config ARCH_ARM_SUNXI
+    bool "Support arm sunxi (Allwinner) SoCs"
+    #select CMD_GPIO
+    #select CMD_USB if DISTRO_DEFAULTS
+    #select DM
+    #select DM_ETH
+    #select DM_GPIO
+    #select DM_KEYBOARD
+    #select DM_SERIAL
+	select CPU_V7A
+    select OF_BOARD_SETUP
+    select OF_CONTROL
+    select SPECIFY_CONSOLE_INDEX
+    select SYS_NS16550
+    select SYS_THUMB_BUILD if !ARM64
+    select USE_TINY_PRINTF
+#	select CPU_V7_HAS_NONSEC
+#	select ARCH_SUPPORT_PSCI
+    imply CMD_GPT
+    imply FAT_WRITE
+    imply OF_LIBFDT_OVERLAY
+    imply PRE_CONSOLE_BUFFER
 
 config ARCH_AT91
 	bool "Atmel AT91"
@@ -2042,8 +2076,6 @@ source "arch/arm/mach-apple/Kconfig"
 
 source "arch/arm/mach-aspeed/Kconfig"
 
-source "arch/arm/mach-at91/Kconfig"
-
 source "arch/arm/mach-bcm283x/Kconfig"
 
 source "arch/arm/mach-bcmstb/Kconfig"
@@ -2200,6 +2232,7 @@ source "board/vscom/baltos/Kconfig"
 source "board/phytium/durian/Kconfig"
 source "board/xen/xenguest_arm64/Kconfig"
 source "board/keymile/Kconfig"
+source "board/sunxi/Kconfig"
 
 source "arch/arm/Kconfig.debug"
 

@@ -356,6 +356,7 @@ int spi_get_bus_and_cs(int busnum, int cs, int speed, int mode,
 #else
 	ret = uclass_get_device_by_seq(UCLASS_SPI, busnum, &bus);
 #endif
+  
 	if (ret) {
 		log_err("Invalid bus %d (err=%d)\n", busnum, ret);
 		return ret;

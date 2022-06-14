@@ -54,6 +54,8 @@ struct cmd_tbl {
 #endif
 };
 
+typedef struct cmd_tbl    cmd_tbl_t;
+
 #if defined(CONFIG_CMD_RUN)
 int do_run(struct cmd_tbl *cmdtp, int flag, int argc,
 	   char *const argv[]);

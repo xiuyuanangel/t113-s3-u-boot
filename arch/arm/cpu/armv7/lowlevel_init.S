@@ -22,6 +22,7 @@ ENDPROC(s_init)
 
 .pushsection .text.lowlevel_init, "ax"
 WEAK(lowlevel_init)
+
 	/*
 	 * Setup a temporary stack. Global data is not available yet.
 	 */

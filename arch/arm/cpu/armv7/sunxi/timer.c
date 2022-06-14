@@ -30,6 +30,7 @@ DECLARE_GLOBAL_DATA_PTR;
 #define TIMER_LOAD_VAL		0xffffffff
 
 #define TIMER_NUM		0	/* we use timer 0 */
+#define SUNXI_TIMER_BASE		0x02050000
 
 /* read the 32-bit timer */
 static ulong read_timer(void)
@@ -59,7 +60,8 @@ int timer_init(void)
 }
 
 /* timer without interrupts */
-static ulong get_timer_masked(void)
+//static ulong get_timer_masked(void)
+ulong get_timer_masked(void)
 {
 	/* current tick value */
 	ulong now = TICKS_TO_HZ(read_timer());

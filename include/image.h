@@ -1464,8 +1464,6 @@ void board_fit_image_post_process(const void *fit, int node, void **p_image,
 
 #define FDT_ERROR	((ulong)(-1))
 
-ulong fdt_getprop_u32(const void *fdt, int node, const char *prop);
-
 /**
  * fit_find_config_node() - Find the node for the best DTB in a FIT image
  *

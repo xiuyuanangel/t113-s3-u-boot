@@ -34,6 +34,7 @@
 
 /* CPU */
 #define COUNTER_FREQUENCY		24000000
+#define CONFIG_SUNXI_SRAM_ADDRESS              (0x00020000L)
 
 /*
  * The DRAM Base differs between some models. We cannot use macros for the
@@ -81,7 +82,8 @@
 	(CONFIG_SYS_INIT_RAM_ADDR + CONFIG_SYS_INIT_SP_OFFSET)
 
 #define PHYS_SDRAM_0			CONFIG_SYS_SDRAM_BASE
-#define PHYS_SDRAM_0_SIZE		0x80000000 /* 2 GiB */
+//#define PHYS_SDRAM_0_SIZE		0x80000000 /* 2 GiB */
+#define PHYS_SDRAM_0_SIZE		0x8000000 /* 128 MiB */
 
 #ifdef CONFIG_AHCI
 #define CONFIG_SYS_64BIT_LBA
@@ -393,11 +395,13 @@
 	"console=ttyS0,115200\0" \
 	SUNXI_MTDIDS_DEFAULT \
 	SUNXI_MTDPARTS_DEFAULT \
-	"uuid_gpt_esp=" UUID_GPT_ESP "\0" \
-	"uuid_gpt_system=" UUID_GPT_SYSTEM "\0" \
-	"partitions=" PARTS_DEFAULT "\0" \
 	BOOTCMD_SUNXI_COMPAT \
 	BOOTENV
+/*
+    "uuid_gpt_esp=" UUID_GPT_ESP "\0" \
+	"uuid_gpt_system=" UUID_GPT_SYSTEM "\0" \
+	"partitions=" PARTS_DEFAULT "\0"
+*/
 
 #else /* ifndef CONFIG_SPL_BUILD */
 #define CONFIG_EXTRA_ENV_SETTINGS

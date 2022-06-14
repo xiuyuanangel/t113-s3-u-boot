@@ -16,6 +16,7 @@
 #include <malloc.h>
 #include <asm/io.h>
 #include <asm/gpio.h>
+#include <asm/arch-sunxi/gpio.h>
 #include <dm/device-internal.h>
 #include <dt-bindings/gpio/gpio.h>
 
