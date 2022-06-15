@@ -1,1 +1,2 @@
+make t113_defconfig
 make -j16 u-boot.bin
