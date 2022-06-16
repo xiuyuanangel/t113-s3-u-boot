@@ -273,10 +273,8 @@ ifeq ($(HOSTARCH),$(ARCH))
 CROSS_COMPILE ?=
 endif
 
-ARCH := riscv
-CROSS_COMPILE := /opt/linaro/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
-#CROSS_COMPILE := /opt/riscv/toolchain-thead-glibc/riscv64-glibc-gcc-thead_20200702/bin/riscv64-unknown-linux-gnu-
-#CROSS_COMPILE := /opt/riscv/Xuantie-900-gcc-elf-newlib-x86_64-V2.2.4/bin/riscv64-unknown-elf-
+ARCH ?= arm
+CROSS_COMPILE ?= /opt/linaro/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
 
 KCONFIG_CONFIG	?= .config
 export KCONFIG_CONFIG
